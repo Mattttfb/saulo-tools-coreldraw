@@ -1,0 +1,556 @@
+<UserControl x:Class="SauloTools.DockerUI"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             MinWidth="230"
+             Background="{DynamicResource CorelBgBrush}"
+             Foreground="{DynamicResource CorelTextBrush}"
+             FontFamily="Segoe UI">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Themes/CorelTheme.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <DockPanel LastChildFill="True">
+
+        <!-- TOP QUICK-JUMP NAVIGATION BAR -->
+        <Border DockPanel.Dock="Top"
+                Background="{DynamicResource CorelStatusBgBrush}"
+                BorderBrush="{DynamicResource CorelDividerBrush}"
+                BorderThickness="0,0,0,1"
+                Padding="6,6,6,3">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <WrapPanel Grid.Column="0" Orientation="Horizontal">
+                    <Button Content="Sangrias" Style="{StaticResource NavPillButtonStyle}" Click="NavJump_Click" Tag="Sangrias"/>
+                    <Button Content="Faca" Style="{StaticResource NavPillButtonStyle}" Click="NavJump_Click" Tag="Faca"/>
+                    <Button Content="Agrupar" Style="{StaticResource NavPillButtonStyle}" Click="NavJump_Click" Tag="Agrupar"/>
+                    <Button Content="Quick" Style="{StaticResource NavPillButtonStyle}" Click="NavJump_Click" Tag="Quick"/>
+                    <Button Content="Crachá/Seq" Style="{StaticResource NavPillButtonStyle}" Click="NavJump_Click" Tag="CrachasSeq"/>
+                    <Button Content="RIP" Style="{StaticResource NavPillButtonStyle}" Click="NavJump_Click" Tag="Rip"/>
+                </WrapPanel>
+                <Button x:Name="BtnToggleAll"
+                        Grid.Column="1"
+                        Content="⊟"
+                        ToolTip="Recolher ou expandir todas as seções"
+                        Style="{StaticResource NavPillButtonStyle}"
+                        VerticalAlignment="Top"
+                        Margin="4,0,0,0"
+                        Click="BtnToggleAll_Click"/>
+            </Grid>
+        </Border>
+
+        <!-- BOTTOM STATUS BAR -->
+        <Border DockPanel.Dock="Bottom"
+                Background="{DynamicResource CorelStatusBgBrush}"
+                BorderBrush="{DynamicResource CorelDividerBrush}"
+                BorderThickness="0,1,0,0"
+                Padding="8,5">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <DockPanel Grid.Row="0" LastChildFill="True">
+                    <Ellipse x:Name="StatusDot"
+                             DockPanel.Dock="Left"
+                             Width="7" Height="7"
+                             Fill="#3FA65C"
+                             Margin="0,0,6,0"
+                             VerticalAlignment="Center"/>
+                    <TextBlock x:Name="TxtStatus"
+                               Text="Pronto."
+                               FontSize="10.5"
+                               Foreground="{DynamicResource CorelTextBrush}"
+                               TextWrapping="Wrap"/>
+                </DockPanel>
+                <TextBlock x:Name="TxtSelectionInfo"
+                           Grid.Row="1"
+                           Text="Seleção: 0 objeto(s)"
+                           FontSize="9.5"
+                           Foreground="{DynamicResource CorelMutedTextBrush}"
+                           Margin="13,2,0,0"/>
+            </Grid>
+        </Border>
+
+        <!-- MAIN SCROLLABLE ACCORDION BODY -->
+        <ScrollViewer x:Name="MainScroll"
+                      VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled">
+            <StackPanel Orientation="Vertical">
+
+                <!-- ========================================================= -->
+                <!-- SEÇÃO 1: SANGRIAS                                         -->
+                <!-- ========================================================= -->
+                <Expander x:Name="ExpSangrias" Header="Sangrias &amp; Serpentina" Style="{StaticResource CorelExpanderStyle}" Expanded="Expander_StateChanged" Collapsed="Expander_StateChanged">
+                    <StackPanel>
+                        <Grid Margin="0,0,0,6">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="6"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="Cor" Style="{StaticResource FieldLabelStyle}"/>
+                                <ComboBox x:Name="CmbSangriaCor" Style="{StaticResource CorelComboBoxStyle}" SelectionChanged="SettingControl_Changed">
+                                    <ComboBoxItem Content="Preto"/>
+                                    <ComboBoxItem Content="Branco"/>
+                                    <ComboBoxItem Content="Vermelho"/>
+                                </ComboBox>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2">
+                                <TextBlock Text="Espessura" Style="{StaticResource FieldLabelStyle}"/>
+                                <ComboBox x:Name="CmbSangriaEsp" Style="{StaticResource CorelComboBoxStyle}" SelectionChanged="SettingControl_Changed">
+                                    <ComboBoxItem Content="Esp. Mínima"/>
+                                    <ComboBoxItem Content="0,5 Pt"/>
+                                    <ComboBoxItem Content="0,75 Pt"/>
+                                    <ComboBoxItem Content="1,5 Pt"/>
+                                </ComboBox>
+                            </StackPanel>
+                        </Grid>
+
+                        <TextBlock Text="Perfil de Sangria" Style="{StaticResource FieldLabelStyle}"/>
+                        <ComboBox x:Name="CmbSangriaTipo" Style="{StaticResource CorelComboBoxStyle}" Margin="0,0,0,6" SelectionChanged="SettingControl_Changed">
+                            <ComboBoxItem Content="-Normal"/>
+                            <ComboBoxItem Content="-Perfurado e Envel."/>
+                            <ComboBoxItem Content="-Ilhós"/>
+                            <ComboBoxItem Content="-Cavalete"/>
+                            <ComboBoxItem Content="-Banners"/>
+                            <ComboBoxItem Content="-Faixa"/>
+                            <ComboBoxItem Content="-Display_12"/>
+                            <ComboBoxItem Content="-Display_6"/>
+                            <ComboBoxItem Content="-Lona Rebitada F."/>
+                        </ComboBox>
+
+                        <TextBlock Text="Forma" Style="{StaticResource FieldLabelStyle}"/>
+                        <WrapPanel Margin="0,1,0,6">
+                            <RadioButton x:Name="RbFormaRet" Content="Retângulo" GroupName="SangriaForma" Style="{StaticResource CorelRadioButtonStyle}" Margin="0,0,10,2" IsChecked="True" Checked="RbForma_Changed"/>
+                            <RadioButton x:Name="RbFormaCirc" Content="Círculo" GroupName="SangriaForma" Style="{StaticResource CorelRadioButtonStyle}" Margin="0,0,10,2" Checked="RbForma_Changed"/>
+                            <RadioButton x:Name="RbFormaPers" Content="Personal." GroupName="SangriaForma" Style="{StaticResource CorelRadioButtonStyle}" Margin="0,0,0,2" Checked="RbForma_Changed"/>
+                        </WrapPanel>
+
+                        <CheckBox x:Name="ChkEspacFaca"
+                                  Content="Espaçamento da Faca (+10 cm)"
+                                  Style="{StaticResource CorelCheckBoxStyle}"
+                                  Margin="0,0,0,8"
+                                  Checked="SettingControl_Changed"
+                                  Unchecked="SettingControl_Changed"/>
+
+                        <Grid Margin="0,0,0,6">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="6"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Button Grid.Column="0" Content="CRIAR" Style="{StaticResource CorelPrimaryButtonStyle}" Click="BtnSangriaCriar_Click"/>
+                            <Button Grid.Column="2" Content="EXCLUIR" Style="{StaticResource CorelDangerButtonStyle}" Click="BtnSangriaExcluir_Click"/>
+                        </Grid>
+
+                        <TextBlock Text="ENFILEIRAR CORTE (SERPENTINA)" Style="{StaticResource SubGroupTitleStyle}"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="6"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Button Grid.Column="0" Content="← Dir. p/ Esq." ToolTip="Serpentina iniciando da direita para esquerda" Style="{StaticResource CorelButtonStyle}" Click="BtnSerpentinaEsq_Click"/>
+                            <Button Grid.Column="2" Content="Esq. p/ Dir. →" ToolTip="Serpentina iniciando da esquerda para direita" Style="{StaticResource CorelButtonStyle}" Click="BtnSerpentinaDir_Click"/>
+                        </Grid>
+                    </StackPanel>
+                </Expander>
+
+                <!-- ========================================================= -->
+                <!-- SEÇÃO 2: CRIAR FACA                                       -->
+                <!-- ========================================================= -->
+                <Expander x:Name="ExpFaca" Header="Criar Faca" Style="{StaticResource CorelExpanderStyle}" Expanded="Expander_StateChanged" Collapsed="Expander_StateChanged">
+                    <StackPanel>
+                        <Grid Margin="0,0,0,6">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="5"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="5"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="Quant." Style="{StaticResource FieldLabelStyle}"/>
+                                <TextBox x:Name="TxtFacaQuant" Style="{StaticResource CorelTextBoxStyle}" Text="50" TextChanged="SettingControl_Changed"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2">
+                                <TextBlock Text="Espaço" Style="{StaticResource FieldLabelStyle}"/>
+                                <ComboBox x:Name="CmbFacaEspaco" Style="{StaticResource CorelComboBoxStyle}" SelectionChanged="SettingControl_Changed">
+                                    <ComboBoxItem Content="0,0 mm"/>
+                                    <ComboBoxItem Content="0,5mm"/>
+                                    <ComboBoxItem Content="1Cm"/>
+                                </ComboBox>
+                            </StackPanel>
+                            <StackPanel Grid.Column="4">
+                                <TextBlock Text="Largura" Style="{StaticResource FieldLabelStyle}"/>
+                                <TextBox x:Name="TxtFacaLargura" Style="{StaticResource CorelTextBoxStyle}" Text="100" TextChanged="SettingControl_Changed"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <CheckBox x:Name="ChkFacaPreencher"
+                                  Content="Preencher última linha"
+                                  Style="{StaticResource CorelCheckBoxStyle}"
+                                  Margin="0,0,0,8"
+                                  Checked="SettingControl_Changed"
+                                  Unchecked="SettingControl_Changed"/>
+
+                        <Grid Margin="0,0,0,6">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="6"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Button Grid.Column="0" Content="CRIAR FACA" Style="{StaticResource CorelPrimaryButtonStyle}" Click="BtnFacaCriar_Click"/>
+                            <Button Grid.Column="2" Content="EXCLUIR" Style="{StaticResource CorelDangerButtonStyle}" Click="BtnFacaExcluir_Click"/>
+                        </Grid>
+
+                        <Border Background="{DynamicResource CorelInputBgBrush}"
+                                BorderBrush="{DynamicResource CorelDividerBrush}"
+                                BorderThickness="1"
+                                CornerRadius="2"
+                                Padding="8,4">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock x:Name="TxtFacaFaltam" Grid.Column="0" Text="Faltam: 0" FontSize="11" Foreground="{DynamicResource CorelMutedTextBrush}"/>
+                                <TextBlock x:Name="TxtFacaTotal" Grid.Column="1" Text="Total: 0" FontSize="11" FontWeight="SemiBold" HorizontalAlignment="Right" Foreground="{DynamicResource CorelTextBrush}"/>
+                            </Grid>
+                        </Border>
+                    </StackPanel>
+                </Expander>
+
+                <!-- ========================================================= -->
+                <!-- SEÇÃO 3: AGRUPAR & ORGANIZAR                              -->
+                <!-- ========================================================= -->
+                <Expander x:Name="ExpAgrupar" Header="Agrupar &amp; Organizar" Style="{StaticResource CorelExpanderStyle}" Expanded="Expander_StateChanged" Collapsed="Expander_StateChanged">
+                    <StackPanel>
+                        <TextBlock Text="AGRUPAR POR SOBREPOSIÇÃO" Style="{StaticResource SubGroupTitleStyle}" Margin="0,0,0,4"/>
+                        <CheckBox x:Name="ChkAgruparAlinhar"
+                                  Content="Alinhar e Redimensionar (margem 1,5mm)"
+                                  Style="{StaticResource CorelCheckBoxStyle}"
+                                  Margin="0,0,0,6"
+                                  IsChecked="True"
+                                  Checked="SettingControl_Changed"
+                                  Unchecked="SettingControl_Changed"/>
+                        <Button Content="AGRUPAR SELEÇÃO" Style="{StaticResource CorelPrimaryButtonStyle}" Margin="0,0,0,8" Click="BtnAgrupar_Click"/>
+
+                        <Border Height="1" Background="{DynamicResource CorelDividerBrush}" Margin="0,0,0,6"/>
+
+                        <TextBlock Text="ORGANIZAR EM GRADE" Style="{StaticResource SubGroupTitleStyle}" Margin="0,0,0,4"/>
+                        <Grid Margin="0,0,0,6">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="6"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="Espaço (cm)" Style="{StaticResource FieldLabelStyle}"/>
+                                <TextBox x:Name="TxtOrgEspaco" Style="{StaticResource CorelTextBoxStyle}" Text="1" TextChanged="SettingControl_Changed"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2">
+                                <TextBlock Text="Largura máx. (cm)" Style="{StaticResource FieldLabelStyle}"/>
+                                <TextBox x:Name="TxtOrgLargura" Style="{StaticResource CorelTextBoxStyle}" Text="100" TextChanged="SettingControl_Changed"/>
+                            </StackPanel>
+                        </Grid>
+                        <Button Content="Organizar em Grade" Style="{StaticResource CorelButtonStyle}" Margin="0,0,0,8" Click="BtnOrgGrade_Click"/>
+
+                        <TextBlock Text="ENCAIXE INTELIGENTE (COM ROTAÇÃO 90°)" Style="{StaticResource SubGroupTitleStyle}" Margin="0,0,0,4"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="75"/>
+                                <ColumnDefinition Width="6"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox x:Name="TxtOrgIntelLargura" Grid.Column="0" Style="{StaticResource CorelTextBoxStyle}" Text="150" ToolTip="Largura limite em cm" TextChanged="SettingControl_Changed"/>
+                            <Button Grid.Column="2" Content="Organizar Inteligente" Style="{StaticResource CorelButtonStyle}" Click="BtnOrgInteligente_Click"/>
+                        </Grid>
+                    </StackPanel>
+                </Expander>
+
+                <!-- ========================================================= -->
+                <!-- SEÇÃO 4: QUICK (UTILITÁRIOS RÁPIDOS)                      -->
+                <!-- ========================================================= -->
+                <Expander x:Name="ExpQuick" Header="Quick &amp; Utilitários" Style="{StaticResource CorelExpanderStyle}" Expanded="Expander_StateChanged" Collapsed="Expander_StateChanged">
+                    <StackPanel>
+                        <!-- Etiqueta de Faca -->
+                        <TextBlock Text="ETIQUETA / MARCAÇÃO DE FACA" Style="{StaticResource SubGroupTitleStyle}" Margin="0,0,0,4"/>
+                        <Grid Margin="0,0,0,6">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="6"/>
+                                <ColumnDefinition Width="82"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox x:Name="TxtQuickFacaNome" Grid.Column="0" Style="{StaticResource CorelTextBoxStyle}" Text="F-" TextChanged="SettingControl_Changed"/>
+                            <Button x:Name="BtnQuickFacaModo" Grid.Column="2" Content="NORMAL" Style="{StaticResource CorelButtonStyle}" Click="BtnQuickFacaModo_Click"/>
+                        </Grid>
+                        <Button x:Name="BtnQuickAplicarFaca" Content="Aplicar Etiqueta Faca" Style="{StaticResource CorelPrimaryButtonStyle}" Margin="0,0,0,8" Click="BtnQuickAplicarFaca_Click"/>
+
+                        <Border Height="1" Background="{DynamicResource CorelDividerBrush}" Margin="0,0,0,6"/>
+
+                        <!-- Bitmap & Rotação -->
+                        <TextBlock Text="BITMAP 300 DPI &amp; ROTAÇÃO" Style="{StaticResource SubGroupTitleStyle}" Margin="0,0,0,4"/>
+                        <Grid Margin="0,0,0,5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="6"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Button Grid.Column="0" Content="Bitmap RGB" Style="{StaticResource CorelButtonStyle}" Click="BtnBitmapRgb_Click"/>
+                            <Button Grid.Column="2" Content="Bitmap CMYK" Style="{StaticResource CorelButtonStyle}" Click="BtnBitmapCmyk_Click"/>
+                        </Grid>
+                        <Grid Margin="0,0,0,8">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="5"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="5"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Button Grid.Column="0" Content="↺ 90° Esq" Style="{StaticResource CorelButtonStyle}" Click="BtnRotEsq_Click"/>
+                            <Button Grid.Column="2" Content="↻ 90° Dir" Style="{StaticResource CorelButtonStyle}" Click="BtnRotDir_Click"/>
+                            <Button Grid.Column="4" Content="cm" ToolTip="Definir unidade do documento para centímetros" Style="{StaticResource CorelButtonStyle}" Click="BtnUnidadeCm_Click"/>
+                        </Grid>
+
+                        <Border Height="1" Background="{DynamicResource CorelDividerBrush}" Margin="0,0,0,6"/>
+
+                        <!-- Utilitários Extras -->
+                        <TextBlock Text="FERRAMENTAS RÁPIDAS" Style="{StaticResource SubGroupTitleStyle}" Margin="0,0,0,4"/>
+                        <Grid Margin="0,0,0,8">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="6"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Button Grid.Column="0" Content="Separar p/ Cor" ToolTip="Separa objetos do rastreamento em camadas por cor" Style="{StaticResource CorelButtonStyle}" Click="BtnSepararCor_Click"/>
+                            <Button Grid.Column="2" Content="Copiar Textos" ToolTip="Extrai textos do grupo selecionado para o Clipboard" Style="{StaticResource CorelButtonStyle}" Click="BtnCopiarTexto_Click"/>
+                        </Grid>
+
+                        <Border Height="1" Background="{DynamicResource CorelDividerBrush}" Margin="0,0,0,6"/>
+
+                        <!-- Mover Páginas -->
+                        <TextBlock Text="MOVER PÁGINAS PARA PÁGINA 1" Style="{StaticResource SubGroupTitleStyle}" Margin="0,0,0,4"/>
+                        <Button Content="Mover apenas Página 2 → 1" Style="{StaticResource CorelButtonStyle}" Margin="0,0,0,6" Click="BtnMoverPag2_Click"/>
+
+                        <Grid Margin="0,0,0,5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="5"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="5"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="5"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="Larg." Style="{StaticResource FieldLabelStyle}"/>
+                                <TextBox x:Name="TxtMovLargObj" Style="{StaticResource CorelTextBoxStyle}" Text="5" TextChanged="SettingControl_Changed"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2">
+                                <TextBlock Text="Alt." Style="{StaticResource FieldLabelStyle}"/>
+                                <TextBox x:Name="TxtMovAltObj" Style="{StaticResource CorelTextBoxStyle}" Text="5" TextChanged="SettingControl_Changed"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="4">
+                                <TextBlock Text="Máx." Style="{StaticResource FieldLabelStyle}"/>
+                                <TextBox x:Name="TxtMovLargMax" Style="{StaticResource CorelTextBoxStyle}" Text="20" TextChanged="SettingControl_Changed"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="6">
+                                <TextBlock Text="Gap" Style="{StaticResource FieldLabelStyle}"/>
+                                <TextBox x:Name="TxtMovAfast" Style="{StaticResource CorelTextBoxStyle}" Text="0,5" TextChanged="SettingControl_Changed"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <Grid Margin="0,0,0,5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="8"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <CheckBox x:Name="ChkMovBorda" Grid.Column="0" Content="Borda 0,5pt" Style="{StaticResource CorelCheckBoxStyle}" IsChecked="True" Checked="SettingControl_Changed" Unchecked="SettingControl_Changed"/>
+                            <ComboBox x:Name="CmbMovCorBorda" Grid.Column="2" Style="{StaticResource CorelComboBoxStyle}" SelectionChanged="SettingControl_Changed">
+                                <ComboBoxItem Content="Preto"/>
+                                <ComboBoxItem Content="Branco"/>
+                                <ComboBoxItem Content="Cinza Claro"/>
+                            </ComboBox>
+                        </Grid>
+
+                        <CheckBox x:Name="ChkMovBitmap"
+                                  Content="Converter p/ Bitmap CMYK 100 DPI"
+                                  Style="{StaticResource CorelCheckBoxStyle}"
+                                  Margin="0,0,0,6"
+                                  Checked="SettingControl_Changed"
+                                  Unchecked="SettingControl_Changed"/>
+
+                        <Button Content="Consolidar Todas Páginas em Grade" Style="{StaticResource CorelButtonStyle}" Click="BtnMoverTodasPaginas_Click"/>
+                    </StackPanel>
+                </Expander>
+
+                <!-- ========================================================= -->
+                <!-- SEÇÃO 5: CRACHÁS & SEQUÊNCIA NUMÉRICA                     -->
+                <!-- ========================================================= -->
+                <Expander x:Name="ExpCrachasSeq" Header="Crachás &amp; Sequência" Style="{StaticResource CorelExpanderStyle}" Expanded="Expander_StateChanged" Collapsed="Expander_StateChanged">
+                    <StackPanel>
+                        <TextBlock Text="TAMANHO PADRÃO DE CRACHÁ" Style="{StaticResource SubGroupTitleStyle}" Margin="0,0,0,4"/>
+                        <Grid Margin="0,0,0,8">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="6"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Button Grid.Column="0" Style="{StaticResource CorelButtonStyle}" Padding="6,6" Click="BtnCrachaPaisagem_Click">
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <Border Width="18" Height="12" BorderBrush="{DynamicResource CorelAccentBrush}" BorderThickness="1.5" CornerRadius="1" Margin="0,0,6,0"/>
+                                    <StackPanel>
+                                        <TextBlock Text="Paisagem" FontSize="10.5" FontWeight="SemiBold"/>
+                                        <TextBlock Text="8,6 × 5,5 cm" FontSize="9" Foreground="{DynamicResource CorelMutedTextBrush}"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Button>
+                            <Button Grid.Column="2" Style="{StaticResource CorelButtonStyle}" Padding="6,6" Click="BtnCrachaRetrato_Click">
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <Border Width="12" Height="18" BorderBrush="{DynamicResource CorelAccentBrush}" BorderThickness="1.5" CornerRadius="1" Margin="0,0,6,0"/>
+                                    <StackPanel>
+                                        <TextBlock Text="Retrato" FontSize="10.5" FontWeight="SemiBold"/>
+                                        <TextBlock Text="5,5 × 8,6 cm" FontSize="9" Foreground="{DynamicResource CorelMutedTextBrush}"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Button>
+                        </Grid>
+
+                        <Border Height="1" Background="{DynamicResource CorelDividerBrush}" Margin="0,0,0,6"/>
+
+                        <TextBlock Text="GERADOR DE SEQUÊNCIA" Style="{StaticResource SubGroupTitleStyle}" Margin="0,0,0,4"/>
+                        <Grid Margin="0,0,0,6">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="5"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="5"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="Quant." Style="{StaticResource FieldLabelStyle}"/>
+                                <TextBox x:Name="TxtSeqQuant" Style="{StaticResource CorelTextBoxStyle}" Text="10" TextChanged="SettingControl_Changed"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2">
+                                <TextBlock Text="Tamanho" Style="{StaticResource FieldLabelStyle}"/>
+                                <ComboBox x:Name="CmbSeqTamanho" Style="{StaticResource CorelComboBoxStyle}" SelectionChanged="SettingControl_Changed">
+                                    <ComboBoxItem Content="3 cm"/>
+                                    <ComboBoxItem Content="8 cm"/>
+                                    <ComboBoxItem Content="10 cm"/>
+                                    <ComboBoxItem Content="15 cm"/>
+                                    <ComboBoxItem Content="20 cm"/>
+                                </ComboBox>
+                            </StackPanel>
+                            <StackPanel Grid.Column="4">
+                                <TextBlock Text="Espaço" Style="{StaticResource FieldLabelStyle}"/>
+                                <ComboBox x:Name="CmbSeqEspaco" Style="{StaticResource CorelComboBoxStyle}" SelectionChanged="SettingControl_Changed">
+                                    <ComboBoxItem Content="0,5 mm"/>
+                                    <ComboBoxItem Content="1 cm"/>
+                                    <ComboBoxItem Content="2 cm"/>
+                                    <ComboBoxItem Content="3 cm"/>
+                                    <ComboBoxItem Content="4 cm"/>
+                                    <ComboBoxItem Content="5 cm"/>
+                                </ComboBox>
+                            </StackPanel>
+                        </Grid>
+
+                        <Grid Margin="0,0,0,6">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="6"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="Prefixo (antes do nº)" Style="{StaticResource FieldLabelStyle}"/>
+                                <TextBox x:Name="TxtSeqPrefixo" Style="{StaticResource CorelTextBoxStyle}" Text="" TextChanged="SettingControl_Changed"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2">
+                                <TextBlock Text="Texto fixo (sem nº)" Style="{StaticResource FieldLabelStyle}"/>
+                                <TextBox x:Name="TxtSeqFixo" Style="{StaticResource CorelTextBoxStyle}" Text="" TextChanged="SettingControl_Changed"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <WrapPanel Margin="0,0,0,8">
+                            <CheckBox x:Name="ChkSeqNumeracao" Content="Sequencial" Style="{StaticResource CorelCheckBoxStyle}" Margin="0,0,10,3" IsChecked="True" Checked="ChkSeqNumeracao_Changed" Unchecked="ChkSeqNumeracao_Changed"/>
+                            <CheckBox x:Name="ChkSeqNegrito" Content="Negrito" Style="{StaticResource CorelCheckBoxStyle}" Margin="0,0,10,3" IsChecked="True" Checked="SettingControl_Changed" Unchecked="SettingControl_Changed"/>
+                            <CheckBox x:Name="ChkSeqContorno" Content="Só contorno" Style="{StaticResource CorelCheckBoxStyle}" Margin="0,0,0,3" Checked="SettingControl_Changed" Unchecked="SettingControl_Changed"/>
+                        </WrapPanel>
+
+                        <Button Content="CRIAR SEQUÊNCIA" Style="{StaticResource CorelPrimaryButtonStyle}" Click="BtnCriarSeq_Click"/>
+                    </StackPanel>
+                </Expander>
+
+                <!-- ========================================================= -->
+                <!-- SEÇÃO 6: IMPRESSÃO / RIP (GRADE & TETRIS)                 -->
+                <!-- ========================================================= -->
+                <Expander x:Name="ExpRip" Header="Impressão / RIP" Style="{StaticResource CorelExpanderStyle}" Expanded="Expander_StateChanged" Collapsed="Expander_StateChanged">
+                    <StackPanel>
+                        <TextBlock Text="GRADE DE INTERSEÇÃO (EMENDA DE LONA)" Style="{StaticResource SubGroupTitleStyle}" Margin="0,0,0,4"/>
+                        <Grid Margin="0,0,0,6">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="6"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="Colunas" Style="{StaticResource FieldLabelStyle}"/>
+                                <TextBox x:Name="TxtRipCols" Style="{StaticResource CorelTextBoxStyle}" Text="2" TextChanged="SettingControl_Changed"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2">
+                                <TextBlock Text="Linhas" Style="{StaticResource FieldLabelStyle}"/>
+                                <TextBox x:Name="TxtRipLinhas" Style="{StaticResource CorelTextBoxStyle}" Text="4" TextChanged="SettingControl_Changed"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <Grid Margin="0,0,0,6">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="6"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="Emenda Direita (cm)" Style="{StaticResource FieldLabelStyle}"/>
+                                <TextBox x:Name="TxtRipDir" Style="{StaticResource CorelTextBoxStyle}" Text="5" TextChanged="SettingControl_Changed"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2">
+                                <TextBlock Text="Emenda Baixo (cm)" Style="{StaticResource FieldLabelStyle}"/>
+                                <TextBox x:Name="TxtRipBaixo" Style="{StaticResource CorelTextBoxStyle}" Text="5" TextChanged="SettingControl_Changed"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <CheckBox x:Name="ChkRipBorda" Content="Aplicar borda (0,01 cm preto)" Style="{StaticResource CorelCheckBoxStyle}" Margin="0,0,0,4" IsChecked="True" Checked="SettingControl_Changed" Unchecked="SettingControl_Changed"/>
+                        <CheckBox x:Name="ChkRipIntersecao" Content="Recortar interseção em nova página" Style="{StaticResource CorelCheckBoxStyle}" Margin="0,0,0,8" IsChecked="True" Checked="SettingControl_Changed" Unchecked="SettingControl_Changed"/>
+
+                        <Button Content="GERAR GRADE / INTERSEÇÃO" Style="{StaticResource CorelPrimaryButtonStyle}" Margin="0,0,0,10" Click="BtnRipIntersecao_Click"/>
+
+                        <Border Height="1" Background="{DynamicResource CorelDividerBrush}" Margin="0,0,0,6"/>
+
+                        <TextBlock Text="MONTAR TETRIS (APROVEITAMENTO DE ROLO)" Style="{StaticResource SubGroupTitleStyle}" Margin="0,0,0,4"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="75"/>
+                                <ColumnDefinition Width="6"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox x:Name="TxtRipTetrisLarg" Grid.Column="0" Style="{StaticResource CorelTextBoxStyle}" Text="120" ToolTip="Largura máxima da mídia em cm" TextChanged="SettingControl_Changed"/>
+                            <Button Grid.Column="2" Content="Montar Tetris" Style="{StaticResource CorelButtonStyle}" Click="BtnRipTetris_Click"/>
+                        </Grid>
+                    </StackPanel>
+                </Expander>
+
+            </StackPanel>
+        </ScrollViewer>
+
+    </DockPanel>
+</UserControl>

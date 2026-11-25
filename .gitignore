@@ -1,0 +1,11 @@
+# Visual Studio / MSBuild intermediates (keep dist/ tracked for ready-to-install portability)
+src/*/bin/
+src/*/obj/
+tests/bin/
+.vs/
+*.user
+*.suo
+*.pdb
+*.cache
+Thumbs.db
+.DS_Store
